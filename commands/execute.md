@@ -22,7 +22,7 @@ Before starting, validate the plan:
 2. Find the first subtask where `status` is NOT `completed` or `skipped`
 3. For each remaining phase:
    - Display phase header with subtask list and progress so far
-   - For each subtask in the phase: invoke the agent using the protocol below
+   - For each subtask in the phase: load the corresponding agent skill (`db-agent`, `backend-agent`, `ui-design`, `frontend-agent`, `qa-agent`, `devops-agent`, `security-agent`, `review-agent`) and invoke using the protocol below
    - If subtask FAILS: enter error recovery (see below)
    - If subtask passes: update it in frontmatter, continue
    - After all subtasks in a phase pass: increment `phases_completed`

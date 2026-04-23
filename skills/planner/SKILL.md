@@ -142,7 +142,7 @@ Once all gaps are resolved, decompose into phases and subtasks.
 1. Each subtask must be **ATOMIC** — one agent, one objective, touching at most 8 files (creates + modifies combined). If a subtask would touch more than 8 files, split it. The objective should be completable without knowledge of subtasks that haven't run yet
 2. Identify dependencies between subtasks explicitly using subtask IDs (e.g., `depends_on: ["1.1"]`)
 3. Group into phases — subtasks in the same phase CAN run independently
-4. Assign each subtask to exactly one agent: `backend-agent`, `ui-design`, `frontend-agent`, `qa-agent`
+4. Assign each subtask to exactly one agent: `db-agent`, `backend-agent`, `ui-design`, `frontend-agent`, `qa-agent`, `devops-agent`, `security-agent`, `review-agent`
 5. List **specific files** each subtask will create or modify (full paths)
 6. Estimate complexity: `low` (< 50 lines), `medium` (50-200 lines), `high` (200+ lines)
 7. **No file overlap across phases**: If two subtasks in different phases modify the same file, assign the modification to the LATER phase. If overlap is unavoidable, note it in the Risk assessment
@@ -150,19 +150,33 @@ Once all gaps are resolved, decompose into phases and subtasks.
 
 ### Phase ordering convention
 
-- **Phase 1**: Database schema, migrations, types/interfaces (foundations)
-- **Phase 2**: Backend endpoints, business logic, middleware (API layer)
-- **Phase 3**: UI/UX design — component specs, visual direction, design tokens (`ui-design` agent)
+- **Phase 1**: Database schema, migrations, seeds, indexes (`db-agent`)
+- **Phase 2**: Backend endpoints, business logic, middleware (`backend-agent`)
+- **Phase 3**: UI/UX design — component specs, visual direction, design tokens (`ui-design`)
 - **Phase 4**: Frontend components, pages, hooks — implementing the design specs (`frontend-agent`)
-- **Phase 5**: Integration, wiring frontend to backend (connection)
-- **Phase 6**: Tests — unit, integration, E2E (validation)
+- **Phase 5**: Tests — unit, integration, E2E (`qa-agent`)
+- **Phase 6**: Security audit — vulnerabilities, secrets, OWASP checks (`security-agent`)
+- **Phase 7**: Code review — quality, consistency, patterns, performance (`review-agent`)
+- **Phase 8**: DevOps — Docker, CI/CD, deploy configs, env setup (`devops-agent`)
 
-Not all phases are always needed. Skip phases that don't apply.
+Not all phases are always needed. Skip phases that don't apply. Typical combinations:
+
+| Task type | Phases to use |
+|-----------|--------------|
+| Full feature (backend + frontend) | 1 → 2 → 3 → 4 → 5 → 6 → 7 |
+| Backend only (API, no UI) | 1 → 2 → 5 → 6 → 7 |
+| Frontend only (no new endpoints) | 3 → 4 → 5 → 7 |
+| Infrastructure setup | 8 |
+| Refactor / migration | 1 → 2 → 5 → 6 → 7 |
 
 > **Design-first rule**: When a task involves new UI, ALWAYS schedule a `ui-design`
 > subtask BEFORE the `frontend-agent` subtask. The design phase produces visual
 > direction, component specs, design tokens, and layout wireframes. The frontend-agent
 > then implements exactly what `ui-design` specifies. Never skip design for user-facing features.
+
+> **Review-last rule**: `security-agent` and `review-agent` should ALWAYS be the final
+> phases (after QA). They audit everything created during execution. `devops-agent` runs
+> last if infrastructure changes are needed, since it depends on knowing all the code.
 
 ## Phase 4: Impact Report
 
