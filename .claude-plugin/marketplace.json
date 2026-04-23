@@ -1,10 +1,14 @@
 {
+  "name": "jsflowagent",
+  "owner": {
+    "name": "juanicaii"
+  },
   "plugins": [
     {
       "name": "jsflow",
+      "source": ".",
       "version": "1.0.0",
-      "description": "Multi-agent orchestration plugin for Claude Code. Decomposes complex dev tasks into phased subtasks executed by specialized agents.",
-      "path": "."
+      "description": "Multi-agent orchestration plugin for Claude Code. Decomposes complex dev tasks into phased subtasks executed by specialized agents."
     }
   ]
 }
