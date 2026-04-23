@@ -1,0 +1,10 @@
+{
+  "plugins": [
+    {
+      "name": "jsflow",
+      "version": "1.0.0",
+      "description": "Multi-agent orchestration plugin for Claude Code. Decomposes complex dev tasks into phased subtasks executed by specialized agents.",
+      "path": "."
+    }
+  ]
+}
